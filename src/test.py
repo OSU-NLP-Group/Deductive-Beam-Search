@@ -13,6 +13,8 @@ from prompts.gsm8k import prompt as math_prompt
 from prompts.strategyqa import prompt as cs_prompt
 from prompts.csqa import prompt as csqa_prompt
 from prompts.coin import prompt as coin_prompt
+from prompts.strategyqa import recall_prompt as cs_recall_prompt
+from prompts.csqa import recall_prompt as csqa_recall_prompt
 from tqdm import tqdm
 
 MATH_DATASET = [
@@ -133,9 +135,15 @@ def load_prompt_from_config(config):
         prompt = math_prompt
     elif config.test_dataset in COMMONSENSE_DATASET:
         if config.test_dataset == "csqa":
-            prompt = csqa_prompt
+            if "fact" in config.decode_strategy:
+                prompt = csqa_recall_prompt
+            else:
+                prompt = csqa_prompt
         else:
-            prompt = cs_prompt
+            if "fact" in config.decode_strategy:
+                prompt = cs_recall_prompt
+            else:
+                prompt = cs_prompt
     elif config.test_dataset in SYMBOLIC_DATASET:
         if config.test_dataset == "coin":
             prompt = coin_prompt
@@ -213,7 +221,6 @@ def main():
                 fout.write(f"{json.dumps({sid: beams[0]})}\n")
             with open(f"{save_path}.full", "a+") as fout:
                 fout.write(f"{json.dumps({sid: full_rationales})}\n")
-            # progressbar.set_postfix({"cost": decoder.model.check_cost()})
         else:
             with open(save_path, "a+") as fout:
                 fout.write(f"{json.dumps({sid: answers})}\n")

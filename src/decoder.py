@@ -6,7 +6,6 @@ from vllm import LLM, SamplingParams
 from collections import Counter
 
 from src.model import Ranker
-# from src.openai_api import ChatGPT
 from src.openai_api_mp import ChatGPTPool
 
 class Decoder():
@@ -99,10 +98,7 @@ class FastDecoder(Decoder):
                 answers.append(output.text.strip().split("\n")[0].strip())
             contexts = [context] * len(answers)
             scores = self.ranker(contexts, answers).cpu().squeeze()
-            # scores = torch.tensor(scores).squeeze()
             sorted, indices = torch.sort(scores, descending=True)
-            # print(answers)
-            # input()
             rationale = answers[indices[0]]
             rationales.append(rationale)
             context += f"{rationale}\n"
@@ -132,7 +128,6 @@ class FastDecoder(Decoder):
         while not global_terminated and step < 20:
             current_beams = []
             for beam, score, terminated in beams:
-                # print(beam)
                 # if terminated, leave it alone
                 if terminated:
                     current_beams.append((beam, score, terminated))
@@ -156,15 +151,8 @@ class FastDecoder(Decoder):
                         terminated = True
                         completed_rationales.append((current_beam, current_score.item()))
                     current_beams.append((current_beam, current_score.item(), terminated))
-                #     print(answers[indices[_]])
-                #     print(scores[indices[_]].item())
-                #     print(current_score.item())
-                # input()
             sorted_beams = sorted(current_beams, key=lambda x: x[1], reverse=True)
             beams = sorted_beams[:self.num_beams]
-            # for beam in beams:
-            #     print(beam)
-            # input()
             flag = True
             for _ , _, terminated in beams:
                 if not terminated:
@@ -184,17 +172,11 @@ class FastDecoder(Decoder):
         while not if_verify and step < 10:
             fact_sampling_params = SamplingParams(n=1, temperature=0, top_p=1, max_tokens=512, stop="\n")
             outputs = self.model.generate(self.prompt + context, fact_sampling_params, use_tqdm=False)[0].outputs
-            # outputs = self.model.generate(self.prompt + context, fact_sampling_params, use_tqdm=False)[0]
-            # print(outputs)
             context += outputs[0].text
             context += "\n"
             if "Reasoning" in outputs[0].text:
                 if_verify = True
             step += 1
-            # print(outputs[0])
-            # print(if_verify)
-            # input()
-            
         
         global_terminated = False
         beams = [(context, 1, False)] * self.num_beams # (current rationale, score, terminated)
@@ -203,7 +185,6 @@ class FastDecoder(Decoder):
         while not global_terminated and step < 10:
             current_beams = []
             for beam, score, terminated in beams:
-                # print(beam)
                 # if terminated, leave it alone
                 if terminated:
                     current_beams.append((beam, score, terminated))
@@ -217,15 +198,7 @@ class FastDecoder(Decoder):
                 contexts_for_ranker = [beam] * len(answers)
                 scores = self.ranker(contexts_for_ranker, answers).cpu().squeeze()
                 sorted_scores, indices = torch.sort(scores, descending=True)
-                
-                # # debug
-                # print("========================")
-                # print(beam)
-                # for _, index in enumerate(indices):
-                #     print(answers[index])
-                #     print(sorted_scores[_].item())
-                # input()
-                
+
                 # calculate current score
                 for _ in range(self.num_beams):
                     current_beam = beam + answers[indices[_]] + "\n"
@@ -235,16 +208,9 @@ class FastDecoder(Decoder):
                         terminated = True
                         completed_rationales.append((current_beam, current_score.item()))
                     current_beams.append((current_beam, current_score.item(), terminated))
-                #     print(answers[indices[_]])
-                #     print(scores[indices[_]].item())
-                #     print(current_score.item())
-                # input()
                         
             sorted_beams = sorted(current_beams, key=lambda x: x[1], reverse=True)
             beams = sorted_beams[:self.num_beams]
-            # for beam in beams:
-            #     print(beam)
-            # input()
             flag = True
             for _ , _, terminated in beams:
                 if not terminated:
@@ -270,7 +236,6 @@ class ChatGPTDecoder(Decoder):
     
     @torch.inference_mode()
     def beam_search(self, question):
-        pattern = r'\d+\.\d+|\d+\,\d+|\d+'
         answers = []
         context = "\nQuestion:\n" + question +  "\nAnswer:\n"
         global_terminated = False
@@ -297,40 +262,6 @@ class ChatGPTDecoder(Decoder):
                 scores = self.ranker(contexts_for_ranker, answers).cpu().squeeze()
                 sorted_scores, indices = torch.sort(scores, descending=True)
                 
-                # # add diversity
-                # digits = []
-                # for answer in answers:
-                #     try:
-                #         digit = re.findall(pattern, answer)[-1]
-                #     except:
-                #         digit = None
-                #     digits.append(digit)
-                # cnts = Counter(digits)
-                # diversity_scores = []
-                # for _, digit in enumerate(digits):
-                #     cnt = cnts.get(digit)
-                #     if "Final Answer" in answers[_]:
-                #         diversity_scores.append(1)
-                #     else:
-                #         if scores[_].item() < 0.5:
-                #             diversity_scores.append(0)
-                #         else:
-                #             diversity_scores.append(70 / (70 + cnt))
-                
-                # scores = [score * diversity_scores[_] for _, score in enumerate(scores)]
-                # sorted_scores, indices = torch.sort(torch.tensor(scores), descending=True)
-                
-                # # debug
-                # print("========================")
-                # print(beam)
-                # for _, index in enumerate(indices):
-                #     print(answers[index])
-                #     print(sorted_scores[_].item())
-                # input()
-                
-                
-                    
-                
                 # calculate current score
                 for _ in range(min(len(answers), self.num_beams)):
                     current_beam = beam + answers[indices[_]] + "\n"
@@ -340,23 +271,15 @@ class ChatGPTDecoder(Decoder):
                         terminated = True
                         completed_rationales.append((current_beam, current_score.item()))
                     current_beams.append((current_beam, current_score.item(), terminated))
-                #     print(answers[indices[_]])
-                #     print(scores[indices[_]].item())
-                #     print(current_score.item())
             sorted_beams = sorted(current_beams, key=lambda x: x[1], reverse=True)
             beams = sorted_beams[:self.num_beams]
-            # for beam in sorted(beams):
-            #     print(beam)
-            # input()
             flag = True
             for _ , _, terminated in beams:
                 if not terminated:
                     flag = False
                 break
             global_terminated = flag
-            step += 1
-            # print(f"Step: {step}")
-        # print(f"Cost: {self.model.check_cost()}")  
+            step += 1 
         return (beams, completed_rationales)
     
     @torch.inference_mode()
@@ -373,8 +296,6 @@ class ChatGPTDecoder(Decoder):
             context += "\n"
             if "Reasoning" in outputs[0]:
                 if_verify = True
-        #     print(outputs[0])
-        # input()
                 
         self.model.num_sampling = self.num_sampling
         global_terminated = False
@@ -395,35 +316,8 @@ class ChatGPTDecoder(Decoder):
                     answers.append(output.strip().split("\n")[0].strip())
                 contexts_for_ranker = [beam] * len(answers)
                 scores = self.ranker(contexts_for_ranker, answers).cpu().squeeze()
-                
-                # # add diversity
-                # digits = []
-                # for answer in answers:
-                #     try:
-                #         digit = re.findall(pattern, answer)[-1]
-                #     except:
-                #         digit = None
-                #     digits.append(digit)
-                # cnts = Counter(digits)
-                # diversity_scores = []
-                # for digit in digits:
-                #     cnt = cnts.get(digit)
-                #     diversity_scores.append(20 / (20 + cnt))
-                
-                # scores = [score * diversity_scores[_] for _, score in enumerate(scores)]
                 sorted_scores, indices = torch.sort(torch.tensor(scores), descending=True)
-                
-                # # debug
-                # print("========================")
-                # print(beam)
-                # for _, index in enumerate(indices):
-                #     print(answers[index])
-                #     print(sorted_scores[_].item())
-                # input()
-                
-                
-                    
-                
+
                 # calculate current score
                 for _ in range(self.num_beams):
                     current_beam = beam + answers[indices[_]] + "\n"
@@ -433,14 +327,8 @@ class ChatGPTDecoder(Decoder):
                         terminated = True
                         completed_rationales.append((current_beam, current_score.item()))
                     current_beams.append((current_beam, current_score.item(), terminated))
-                #     print(answers[indices[_]])
-                #     print(scores[indices[_]].item())
-                #     print(current_score.item())
             sorted_beams = sorted(current_beams, key=lambda x: x[1], reverse=True)
             beams = sorted_beams[:self.num_beams]
-            # for beam in sorted(beams):
-            #     print(beam)
-            # input()
             flag = True
             for _ , _, terminated in beams:
                 if not terminated:
@@ -448,5 +336,4 @@ class ChatGPTDecoder(Decoder):
                 break
             global_terminated = flag
             step += 1
-        # print(f"Cost: {self.model.check_cost()}")  
         return (beams, completed_rationales)
