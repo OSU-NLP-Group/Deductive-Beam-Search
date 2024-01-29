@@ -1,20 +1,19 @@
 <h1 align="center">Deductive Beam Search<br>Decoding Deducible Rationale for Chain-of-Thought Reasoning </h1>
 
 ![Static Badge](https://img.shields.io/badge/task-reasoning-purple)
-![GitHub Repo stars](https://img.shields.io/github/stars/OSU-NLP-Group/Deductive-Beam-Search)
+<!-- ![GitHub Repo stars](https://img.shields.io/github/stars/OSU-NLP-Group/Deductive-Beam-Search) -->
 
 Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`]().
 
 # Release Progress
 - Data
   - [x] Training Data
-  - [ ] Checkpoints
 
 - Code
   - [x] Training Codes
   - [x] Inference Codes
   - [ ] Evaluation Codes
-  - [ ] Data Construction Codes
+  - [ ] Dataset Construction Codes
 
 
 
@@ -62,7 +61,7 @@ done
 # Contact
 
 If you have any problems, please contact 
-[Tinghui Zhu](mailto:darthzhu@gmial.com),
+[Tinghui Zhu](mailto:darthzhu@gmial.com) and
 [Kai Zhang](mailto:zhang.13253@osu.edu).
 
 # Citation Information
