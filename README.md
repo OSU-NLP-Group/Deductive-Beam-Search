@@ -1,2 +1,3 @@
-# DBS
-Source Code of paper `Deductive Beam Search: Decoding Deductive Rationale for Chain-of-Thought Reasoning`
+# Deductive Beam Search
+
+Source Code of paper `Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`

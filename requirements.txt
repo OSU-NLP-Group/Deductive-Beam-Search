@@ -1,0 +1,11 @@
+accelerate==0.21.0
+datasets==2.13.1
+multiprocess==0.70.14
+openai==0.28.0
+tiktoken==0.4.0
+tokenizers==0.13.3
+torch==2.0.1
+torchaudio==2.0.2
+torchvision==0.15.2
+transformers==4.33.2
+vllm==0.1.4
