@@ -5,18 +5,6 @@
 
 Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`]().
 
-# Release Progress
-- Data
-  - [x] Training Data
-
-- Code
-  - [x] Training Codes
-  - [x] Inference Codes
-  - [ ] Evaluation Codes
-  - [ ] Dataset Construction Codes
-
-
-
 # Quick Start
 Clone repo:
 ```bash
