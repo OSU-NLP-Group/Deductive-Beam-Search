@@ -3,7 +3,7 @@
 ![Static Badge](https://img.shields.io/badge/task-reasoning-purple)
 <!-- ![GitHub Repo stars](https://img.shields.io/github/stars/OSU-NLP-Group/Deductive-Beam-Search) -->
 
-Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`]().
+Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`](https://arxiv.org/abs/2401.17686).
 
 # Quick Start
 Clone repo:
@@ -49,7 +49,7 @@ done
 # Contact
 
 If you have any problems, please contact 
-[Tinghui Zhu](mailto:darthzhu@gmial.com) and
+[Tinghui Zhu](mailto:darthzhu@gmail.com) and
 [Kai Zhang](mailto:zhang.13253@osu.edu).
 
 # Citation Information
