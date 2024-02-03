@@ -11,7 +11,6 @@ from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 
 from src.data_utils import collate_fn
-from src.loss import listMLE, listNet
 
 class RankingTrainer():
     def __init__(self,
@@ -344,7 +343,6 @@ class RankingMultipleNegativeTrainer():
         
         # prepare model, preprocessor, loss, optimizer and scheduler
         self.model = model
-        self.loss = listMLE
         
         no_decay = ["bias", "LayerNorm.weight"]
         optimizer_grouped_parameters = [
