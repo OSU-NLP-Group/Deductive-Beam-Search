@@ -68,7 +68,7 @@ All training data synthesized is in `data/` folder. The training file `data/stag
 
 ## Checkpoints
 
-We provide the checkpoint of a general deductive verifier, please download from this [link](https://drive.google.com/file/d/19_NQKrvP2AOIOxuRlFB8WuvMQrgLXdSf/view?usp=sharing).
+We provide the checkpoint of a general deductive verifier, please download from this [link](https://drive.google.com/drive/folders/1GbnAiX160Cz63zAbr2FAgB0QFySfM2Vn?usp=sharing).
 You can use it to continue-train on our data or train on your own data.
 
 ## Data Generation
