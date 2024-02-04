@@ -2,9 +2,6 @@ import os
 import json
 import torch
 import random
-torch.manual_seed(42)
-random.seed(42)
-
 from datasets import load_dataset
 
 from src.decoder import FastDecoder, ChatGPTDecoder

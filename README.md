@@ -5,6 +5,15 @@
 
 Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`](https://arxiv.org/abs/2401.17686).
 
+# Release Process:
+- Data
+  - [x] Training data
+  - [ ] Checkpoint
+- Code
+  - [x] Training code
+  - [x] Inference code
+  - [x] Data generation code
+
 # Quick Start
 Clone repo:
 ```bash
@@ -21,12 +30,25 @@ pip install -r requirements.txt
 ```
 
 Training:
-```bash
-python src/train.py \
-     --train_datapath your_data_path \
-     --experiment_name your_experiment_name \
-     --batch_size 8 --gradient_accumulation_steps 16
-```
+
+- Stage 1:
+
+  ```bash
+  python src/train.py \
+      --train_datapath your_data_path_stage1 \
+      --experiment_name your_experiment_name_stage1 \
+      --batch_size 8 --gradient_accumulation_steps 16
+  ```
+
+- Stage 2:
+
+  ```bash
+  python src/train.py \
+      --train_datapath your_data_path_stage2 \
+      --experiment_name your_experiment_name_stage2 \
+      --batch_size 8 --gradient_accumulation_steps 16 \
+      --learning_rate 1e-7
+  ```
 
 Inference:
 ```bash
@@ -46,6 +68,14 @@ do
 done
 ```
 
+# Data Generation
+
+The complete process of synthesizing data is in `src/generate_data.py`.
+If you want to generate data on your own, please modify the data loading part.
+After modifying, you can run `python src/generate_data.py` to generate stage2 data for your own domains.
+
+**\[TODO\]** We will improve the code for easier modification and usage.
+
 # Contact
 
 If you have any problems, please contact 
@@ -57,10 +87,10 @@ If you have any problems, please contact
 If you find our codes and data useful, please consider citing our paper:
 
 ```
-@article{zhu2024deductive
+@article{zhu2024deductive,
   title={Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning},
-  author={Tinghui Zhu and Kai Zhang and Jian Xie and Yu Su},
-  journal={arXiv preprint},
+  author={Zhu, Tinghui and Zhang, Kai and Xie, Jian and Su, Yu},
+  journal={arXiv preprint arXiv:2401.17686},
   year={2024}
 }
 ```
