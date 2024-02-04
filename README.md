@@ -5,15 +5,6 @@
 
 Source Code of paper [`Deductive Beam Search: Decoding Deducible Rationale for Chain-of-Thought Reasoning`](https://arxiv.org/abs/2401.17686).
 
-# Release Process:
-- Data
-  - [x] Training data
-  - [ ] Checkpoint
-- Code
-  - [x] Training code
-  - [x] Inference code
-  - [x] Data generation code
-
 # Quick Start
 Clone repo:
 ```bash
@@ -37,7 +28,8 @@ Training:
   python src/train.py \
       --train_datapath your_data_path_stage1 \
       --experiment_name your_experiment_name_stage1 \
-      --batch_size 8 --gradient_accumulation_steps 16
+      --batch_size 8 --gradient_accumulation_steps 16 \
+      --learning_rate 1e-5
   ```
 
 - Stage 2:
@@ -68,11 +60,21 @@ do
 done
 ```
 
-# Data Generation
+# Data
 
-The complete process of synthesizing data is in `src/generate_data.py`.
+## Training Data
+
+All training data synthesized is in `data/` folder. The training file `data/stage1/train.json` is used for training a general deductive verifier. For stage 2, the arithmetic and symbolic verifier is trained on `data/stage2/arithmetic/train.split.*.json`, and the commonsense verifier is trained on `data/stage2/commonsense/train.json`.
+
+## Checkpoints
+
+We provide the checkpoint of a general deductive verifier, please download from this [link](https://drive.google.com/file/d/19_NQKrvP2AOIOxuRlFB8WuvMQrgLXdSf/view?usp=sharing).
+You can use it to continue-train on our data or train on your own data.
+
+## Data Generation
+The complete process of data construction is in `src/generate_data.py`.
 If you want to generate data on your own, please modify the data loading part.
-After modifying, you can run `python src/generate_data.py` to generate stage2 data for your own domains.
+After modifying, you can run `python src/generate_data.py` to generate data for your own domains.
 
 **\[TODO\]** We will improve the code for easier modification and usage.
 
