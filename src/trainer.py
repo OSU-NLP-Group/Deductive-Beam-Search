@@ -402,9 +402,9 @@ class RankingMultipleNegativeTrainer():
         for step, batch in enumerate(self.train_dataloader):
             contexts, answers = batch
             answers_0 = [answer["0"] for answer in answers] # positive
-            answers_1 = [answer["2"] for answer in answers] # negative 1, set margin to 0.3
-            answers_2 = [answer["1"] for answer in answers] # negative 2, set margin to 0.6
-            answers_3 = [answer["3"] for answer in answers] # negative 3, set margin to 0.6
+            answers_1 = [answer["1"] for answer in answers] # negative 1, set margin to 0.3
+            answers_2 = [answer["2"] for answer in answers] # negative 2, set margin to 0.6
+            answers_3 = [answer["3"] for answer in answers] # negative 3, set margin to 0.9
             
             logits_0 = self.model(contexts, answers_0)
             logits_1 = self.model(contexts, answers_1)
@@ -467,9 +467,9 @@ class RankingMultipleNegativeTrainer():
         for step, batch in tqdm(enumerate(self.val_dataloader)):
             contexts, answers = batch
             answers_0 = [answer["0"] for answer in answers] # positive
-            answers_1 = [answer["2"] for answer in answers] # negative 1, set margin to 0.3
-            answers_2 = [answer["1"] for answer in answers] # negative 2, set margin to 0.6
-            answers_3 = [answer["3"] for answer in answers] # negative 3, set margin to 0.6
+            answers_1 = [answer["1"] for answer in answers] # negative 1, set margin to 0.3
+            answers_2 = [answer["2"] for answer in answers] # negative 2, set margin to 0.6
+            answers_3 = [answer["3"] for answer in answers] # negative 3, set margin to 0.9
             
             logits_0 = self.model(contexts, answers_0)
             logits_1 = self.model(contexts, answers_1)
